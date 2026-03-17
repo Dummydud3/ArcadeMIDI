@@ -10,7 +10,8 @@
         "README.md",
         "assets.json",
         "arcade_midi.ts",
-        "midi_player.ts"
+        "midi_player.ts",
+        "menuMusic.ts"
     ],
     "testFiles": [
         "test.ts"
