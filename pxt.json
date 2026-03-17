@@ -9,13 +9,14 @@
         "main.ts",
         "README.md",
         "assets.json",
-        "arcade_midi.ts"
+        "arcade_midi.ts",
+        "midi_player.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "targetVersions": {
-        "target": "1.8.30",
+        "target": "4.0.12",
         "targetId": "arcade"
     },
     "supportedTargets": [

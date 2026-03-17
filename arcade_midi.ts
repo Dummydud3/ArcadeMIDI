@@ -152,7 +152,7 @@ namespace ArcadeMIDI {
                 }
                 for (const note of this._playing_notes) {
                     this._sound_driver.playNoteCore(0, note.frequency, note.velocity, duration);
-                };
+                }
             }
 
             /**
@@ -518,15 +518,25 @@ namespace ArcadeMIDI {
                 this._pls_stop = false;
                 this._actually_stopped = false;
 
+                let prev_notes: number[] = [];
                 for (let x = 0; x < frame.frame_length; x++) {
                     const frame_time: number = frame.get_duration(x);
                     const frame_velocity: number = frame.get_velocity(x);
                     const frame_notes: number[] = frame.get_notes(x);
 
-                    log(`Playing ${frame_notes.length} notes for ${frame_time} ms at ${frame_velocity} velocity`);
+                    // Remove notes that are no longer in this column (note off)
+                    for (const note of prev_notes) {
+                        if (frame_notes.indexOf(note) < 0) {
+                            this._driver.note_on(note, 0, 0, false);
+                        }
+                    }
+                    // Add/sustain notes in this column (note on)
                     for (const note of frame_notes) {
                         this._driver.note_on(note, frame_velocity, 0, false);
                     }
+                    prev_notes = frame_notes;
+
+                    log(`Playing ${frame_notes.length} notes for ${frame_time} ms at ${frame_velocity} velocity`);
                     this._driver.play_now(frame_time);
                     pause(frame_time);
 
@@ -717,7 +727,7 @@ namespace ArcadeMIDIBlocks {
         is_stopped(): boolean {
             return this._player.stopped;
         }
-        
+
 
         /**
          * Set whether we are paused or not. Note, this will only take effect on the next note.
